@@ -1,6 +1,6 @@
 import * as React from "react";
 import { type VariantProps } from "class-variance-authority";
-import { alertVariants } from "./alert-variants";
+import { alertVariants } from "@/lib/alert-variants";
 
 import { cn } from "@/lib/utils";
 
