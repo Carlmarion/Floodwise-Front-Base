@@ -440,3 +440,61 @@ html {
     border-top-color: #ffffff !important;
   }
 }
+
+/* Sidebar CSS Variables and Transitions */
+@layer base {
+  :root {
+    --sidebar-width: 20rem; /* 320px desktop */
+    --sidebar-width-mobile: 22rem; /* 352px mobile */
+    --sidebar-width-icon: 3rem; /* 48px icon mode */
+  }
+}
+
+@layer utilities {
+  /* Sidebar transition utilities */
+  .sidebar-transition {
+    transition:
+      width 200ms linear,
+      left 200ms linear,
+      right 200ms linear,
+      transform 200ms linear;
+  }
+
+  .sidebar-gap-transition {
+    transition: width 200ms linear;
+  }
+
+  .sidebar-container-transition {
+    transition:
+      left 200ms linear,
+      right 200ms linear,
+      width 200ms linear;
+  }
+
+  /* Collapsible animations */
+  @keyframes collapsible-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes collapsible-up {
+    from {
+      height: var(--radix-collapsible-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  .animate-collapsible-down {
+    animation: collapsible-down 300ms ease-in-out;
+  }
+
+  .animate-collapsible-up {
+    animation: collapsible-up 300ms ease-in-out;
+  }
+}

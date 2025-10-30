@@ -92,33 +92,74 @@ function SidebarProvider({
 function Sidebar({
   children,
   className,
+  side = "left",
   ...props
-}: React.ComponentProps<"div">) {
-  const { isMobile, open } = useSidebar();
+}: React.ComponentProps<"div"> & {
+  side?: "left" | "right";
+}) {
+  const { isMobile, open, setOpen, state } = useSidebar();
 
   if (isMobile) {
     return (
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-80 transform border-r bg-white transition-transform duration-300 ease-in-out",
-          open ? "translate-x-0" : "-translate-x-full",
+      <>
+        {/* Backdrop overlay */}
+        {open && (
+          <div
+            className="fixed inset-0 z-[59] bg-black/50"
+            onClick={() => setOpen(false)}
+          />
         )}
-      >
-        <div className="flex h-full flex-col bg-white">{children}</div>
-      </div>
+
+        {/* Sidebar */}
+        <div
+          className={cn(
+            "sidebar-transition fixed inset-y-0 left-0 z-[60] w-[var(--sidebar-width-mobile)] bg-black text-white",
+            open ? "translate-x-0" : "-translate-x-full",
+          )}
+        >
+          <div className="flex h-full flex-col border-r border-gray-300 bg-black text-white">
+            {children}
+          </div>
+        </div>
+      </>
     );
   }
 
   return (
     <div
-      className={cn(
-        "hidden w-80 border-r bg-background md:flex md:flex-col",
-        !open && "md:hidden",
-        className,
-      )}
-      {...props}
+      className="group peer"
+      data-state={state}
+      data-collapsible={state === "collapsed" ? "offcanvas" : ""}
     >
-      {children}
+      {/* Sidebar Gap - prevents layout shift */}
+      <div
+        data-slot="sidebar-gap"
+        className={cn(
+          "sidebar-gap-transition relative hidden w-[var(--sidebar-width)] bg-transparent md:block",
+          "group-data-[collapsible=offcanvas]:w-0",
+        )}
+      />
+
+      {/* Sidebar Container */}
+      <div
+        data-slot="sidebar-container"
+        className={cn(
+          "sidebar-container-transition fixed inset-y-0 z-10 w-[var(--sidebar-width)] md:flex",
+          side === "left"
+            ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
+            : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+        )}
+      >
+        <div
+          className={cn(
+            "flex h-full w-full flex-col border-r border-gray-300 bg-black text-white",
+            className,
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
@@ -150,11 +191,11 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("border-b p-4", className)} {...props} />;
+  return <div className={cn("p-4", className)} {...props} />;
 }
 
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("border-t p-4", className)} {...props} />;
+  return <div className={cn("p-4", className)} {...props} />;
 }
 
 function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
