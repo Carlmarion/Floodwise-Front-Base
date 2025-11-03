@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
 import type { PropertyDto } from "@/types/property";
 import { PropertyDtoSchema } from "@/types/property";
+import { Badge } from "../ui/badge";
 
 const TOTAL_ASSESSMENT_STEPS = 10;
 
@@ -38,6 +39,16 @@ function PropertyAssessment() {
     100,
     Math.round((completed / TOTAL_ASSESSMENT_STEPS) * 100),
   );
+  const percentageCompleted = Math.round(
+    (completed / TOTAL_ASSESSMENT_STEPS) * 100,
+  );
+
+  const badgeLabel =
+    completed === 0
+      ? "Not Started"
+      : completed === TOTAL_ASSESSMENT_STEPS
+        ? "Completed"
+        : "In Progress";
 
   const buttonLabel =
     completed === 0
@@ -48,15 +59,23 @@ function PropertyAssessment() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Property Assessment</CardTitle>
+        <Badge variant="outline">{badgeLabel}</Badge>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-sm text-muted-foreground">
-          Steps completed: {completed} / {TOTAL_ASSESSMENT_STEPS}
+      <CardContent className="flex flex-col items-center justify-center space-y-4">
+        <div className="flex w-full flex-row items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            {completed} / {TOTAL_ASSESSMENT_STEPS} steps
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {percentageCompleted}% completed
+          </div>
         </div>
         <Progress value={progress} />
-        <Button>{buttonLabel}</Button>
+        <Button className="w-full bg-black text-white" size="lg">
+          {buttonLabel}
+        </Button>
       </CardContent>
     </Card>
   );

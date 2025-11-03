@@ -38,10 +38,13 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { PropertyInfoCard } from "./components/property/PropertyInfoCard";
+import { PropertyAssessment } from "./components/property/PropertyAssessment";
 import { GradientSeparator } from "./components/ui/gradientSeparator";
 import { Footer } from "./components/layout";
 import floodwiseLogo from "./assets/Floodwise-logo-text-white.png";
 import { Header } from "./components/layout";
+import { RiskLevel } from "./components/property/RiskLevel";
+import { RiskFactorsBreakdown } from "./components/property/RiskFactorsBreakdown";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -226,6 +229,12 @@ function App() {
             {/* TODO: Handle loading state while fetching property data */}
             {/* TODO: Handle error state if property fetch fails */}
             <PropertyInfoCard />
+            <span className="block h-4"></span>
+            <PropertyAssessment />
+            <span className="block h-4"></span>
+            <RiskLevel />
+            <span className="block h-4"></span>
+            <RiskFactorsBreakdown />
           </div>
         </div>
         <Footer />

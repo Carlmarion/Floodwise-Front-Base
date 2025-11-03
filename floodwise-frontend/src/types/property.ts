@@ -63,6 +63,15 @@ export const PropertyDtoSchema = z.object({
 });
 
 // ============================================================================
+// Edit Form Schema (frontend only)
+// ============================================================================
+
+export const editPropertySchema = z.object({
+  name: z.string().min(1),
+  emoji: z.string().min(1),
+});
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -75,3 +84,4 @@ export type AdditionalAttributeDto = z.infer<
 >;
 export type PropertyAttributeDto = z.infer<typeof PropertyAttributeDtoSchema>;
 export type PropertyDto = z.infer<typeof PropertyDtoSchema>;
+export type EditPropertyData = z.infer<typeof editPropertySchema>;
