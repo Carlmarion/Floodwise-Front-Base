@@ -455,4 +455,20 @@ html {
   .animate-collapsible-up {
     animation: collapsible-up 300ms ease-in-out;
   }
+
+  /* Instructions element styling */
+  .instructions-element {
+    background-color: #e0f2fe;
+    border: 1px solid #0284c7;
+    padding: 1rem;
+  }
+
+  .instructions-element a {
+    color: #0284c7;
+    text-decoration: underline;
+  }
+
+  .instructions-element a:hover {
+    color: rgb(25, 5, 201);
+  }
 }

@@ -72,6 +72,18 @@ export const editPropertySchema = z.object({
 });
 
 // ============================================================================
+// Flood kit item schemas
+// ============================================================================
+
+export const floodKitItemSchema = z.object({
+  id: z.number().int().nonnegative(),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  videoUrl: z.string().min(1),
+  imageUrl: z.string().min(1).optional(),
+});
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -85,3 +97,4 @@ export type AdditionalAttributeDto = z.infer<
 export type PropertyAttributeDto = z.infer<typeof PropertyAttributeDtoSchema>;
 export type PropertyDto = z.infer<typeof PropertyDtoSchema>;
 export type EditPropertyData = z.infer<typeof editPropertySchema>;
+export type FloodKitItemData = z.infer<typeof floodKitItemSchema>;

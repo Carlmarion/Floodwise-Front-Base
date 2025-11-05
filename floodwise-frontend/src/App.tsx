@@ -45,6 +45,7 @@ import floodwiseLogo from "./assets/Floodwise-logo-text-white.png";
 import { Header } from "./components/layout";
 import { RiskLevel } from "./components/property/RiskLevel";
 import { RiskFactorsBreakdown } from "./components/property/RiskFactorsBreakdown";
+import { FloodKitItemsCard } from "./components/property/FloodKitItemsCard";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -235,6 +236,8 @@ function App() {
             <RiskLevel />
             <span className="block h-4"></span>
             <RiskFactorsBreakdown />
+            <span className="block h-4"></span>
+            <FloodKitItemsCard />
           </div>
         </div>
         <Footer />
