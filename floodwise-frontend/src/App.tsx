@@ -16,6 +16,7 @@ import {
   SidebarMenuButton,
 } from "./components/ui/sidebar";
 import {
+  HammerIcon,
   Home,
   HelpCircle,
   FileText,
@@ -37,21 +38,30 @@ import {
   ChevronDown,
   ChevronRight,
 } from "lucide-react";
-import { PropertyInfoCard } from "./components/property/PropertyInfoCard";
-import { PropertyAssessment } from "./components/property/PropertyAssessment";
+
 import { GradientSeparator } from "./components/ui/gradientSeparator";
 import { Footer } from "./components/layout";
 import floodwiseLogo from "./assets/Floodwise-logo-text-white.png";
 import { Header } from "./components/layout";
-import { RiskLevel } from "./components/property/RiskLevel";
-import { RiskFactorsBreakdown } from "./components/property/RiskFactorsBreakdown";
-import { FloodKitItemsCard } from "./components/property/FloodKitItemsCard";
+import { PropertyOverview } from "./pages/PropertyOverview";
+import { Routes, Route, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { MyFloodKit } from "./pages/MyFloodKit";
+import { PropertyAssessment } from "./pages/PropertyAssessment";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [propertyAssessmentOpen, setPropertyAssessmentOpen] = useState(false);
   const [floodPlanOpen, setFloodPlanOpen] = useState(false);
-
+  const location = useLocation();
+  const routeTitles: Record<string, string> = {
+    "/": "Property Overview",
+    "/my-flood-kit": "My Flood Kit",
+    "/property-assessment": "Property Assessment",
+    "/flood-plan": "Flood Plan",
+    "/faq-support": "FAQ & Support",
+    "/account-management": "Account Management",
+  };
   // TODO: Add API call to fetch current user's property ID on mount
   // TODO: Add API call to fetch user profile/settings if needed
   // useEffect(() => {
@@ -75,9 +85,19 @@ function App() {
           <SidebarMenu>
             <GradientSeparator />
             <SidebarMenuItem>
-              <SidebarMenuButton>
-                <Home className="h-4 w-4" />
-                <span>Property Overview</span>
+              <SidebarMenuButton asChild>
+                <Link to="/">
+                  <Home className="h-4 w-4" />
+                  <span>Property Overview</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link to="/my-flood-kit">
+                  <HammerIcon className="h-4 w-4" />
+                  <span>My Flood Kit</span>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
@@ -99,9 +119,11 @@ function App() {
                 <CollapsibleContent>
                   <div className="ml-6 space-y-1">
                     {/* TODO: Add API calls to fetch property assessment data for each section */}
-                    <SidebarMenuButton>
-                      <CheckCircle className="h-4 w-4" />
-                      <span>Verify Details</span>
+                    <SidebarMenuButton asChild>
+                      <Link to="/property-assessment">
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Verify Details</span>
+                      </Link>
                       {/* TODO: Fetch verify details data on click/navigation */}
                     </SidebarMenuButton>
                     <SidebarMenuButton>
@@ -215,31 +237,12 @@ function App() {
 
       {/* Main Content Area - pushed by the Sidebar */}
       <main className="flex min-w-0 flex-1 flex-col">
-        <Header title="Property Overview" />
-
-        {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-auto p-4 md:p-6">
-          <div className="container mx-auto">
-            <h2 className="mb-4 text-2xl font-semibold">
-              Welcome to your property overview
-            </h2>
-            <p className="mb-6 text-muted-foreground">
-              Monitor here your property information, flood plan and more.
-            </p>
-            {/* TODO: Pass property data from API to PropertyInfoCard */}
-            {/* TODO: Handle loading state while fetching property data */}
-            {/* TODO: Handle error state if property fetch fails */}
-            <PropertyInfoCard />
-            <span className="block h-4"></span>
-            <PropertyAssessment />
-            <span className="block h-4"></span>
-            <RiskLevel />
-            <span className="block h-4"></span>
-            <RiskFactorsBreakdown />
-            <span className="block h-4"></span>
-            <FloodKitItemsCard />
-          </div>
-        </div>
+        <Header title={routeTitles[location.pathname] || "FloodWise"} />
+        <Routes>
+          <Route path="/" element={<PropertyOverview />} />
+          <Route path="/my-flood-kit" element={<MyFloodKit />} />
+          <Route path="/property-assessment" element={<PropertyAssessment />} />
+        </Routes>
         <Footer />
       </main>
     </SidebarProvider>
