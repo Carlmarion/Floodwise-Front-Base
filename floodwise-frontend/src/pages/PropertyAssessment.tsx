@@ -1,17 +1,19 @@
-import { VerifyDetails } from "@/components/property-assessment/verify-details";
-import { useLocation } from "react-router-dom";
+import { VerifyDetails } from "@/components/property-assessment/VerifyDetails";
+import { PropertyConstruction } from "@/components/property-assessment/PropertyConstruction";
+import { OtherStructures } from "@/components/property-assessment/OtherStructures";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function PropertyAssessment() {
-  const location = useLocation();
-  const path = location.pathname;
-  if (path === "/property-assessment") {
-    return <VerifyDetails />;
-  }
   return (
-    <div>
-      <h1>Property Assessment</h1>
-      <VerifyDetails />
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={<Navigate to="/property-assessment/verify-details" replace />}
+      />
+      <Route path="/verify-details" element={<VerifyDetails />} />
+      <Route path="/property-construction" element={<PropertyConstruction />} />
+      <Route path="/other-structures" element={<OtherStructures />} />
+    </Routes>
   );
 }
 

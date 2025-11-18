@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { getIconForFloodKitItem } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { FloodKitItemData } from "@/types/floodKit";
+import { StepIndicator } from "@/components/shared/StepIndicator";
 
 interface FloodKitInstallationViewProps {
   items: FloodKitItemData[];
@@ -102,6 +103,19 @@ function FloodKitInstallationView({
     }
   };
 
+  const floodKitSteps = items.map((item) => {
+    const targetIndex = items.findIndex((i) => i.id === item.id);
+    return {
+      id: item.id.toString(),
+      onClick: () => {
+        setNavigationDirection(
+          targetIndex > currentIndex ? "forward" : "backward",
+        );
+        onSelectItem(item.id);
+      },
+    };
+  });
+
   const NavigationControls = () => (
     <>
       <div className="flex items-center justify-between gap-4">
@@ -115,9 +129,6 @@ function FloodKitInstallationView({
           <ChevronLeft className="h-4 w-4" />
           Previous
         </Button>
-        <Badge variant="outline" className="shrink-0">
-          Step {currentIndex + 1} of {items.length}
-        </Badge>
         <Button
           onClick={goToNextItem}
           disabled={!hasNext}
@@ -130,28 +141,11 @@ function FloodKitInstallationView({
         </Button>
       </div>
 
-      {/* Step Indicators - Centered */}
-      <div className="mt-2 flex items-center justify-center gap-2">
-        {items.map((item, idx) => (
-          <button
-            key={item.id}
-            onClick={() => {
-              setNavigationDirection(
-                idx > currentIndex ? "forward" : "backward",
-              );
-              onSelectItem(item.id);
-            }}
-            className={cn(
-              "cursor-pointer rounded-full transition-all hover:opacity-80",
-              idx === currentIndex
-                ? isMobile
-                  ? "h-4 w-12 bg-black"
-                  : "h-4 w-10 bg-black"
-                : "h-4 w-4 bg-gray-300 hover:bg-gray-400",
-            )}
-            aria-label={`Go to step ${idx + 1}`}
-          />
-        ))}
+      <div className="mt-2">
+        <StepIndicator
+          steps={floodKitSteps}
+          currentStepId={selectedItemId?.toString() ?? ""}
+        />
       </div>
     </>
   );
@@ -176,7 +170,7 @@ function FloodKitInstallationView({
 
           {/* Desktop Navigation */}
           {!isMobile && (
-            <div className="border-x border-b p-4">
+            <div className="border-b p-4">
               <NavigationControls />
             </div>
           )}

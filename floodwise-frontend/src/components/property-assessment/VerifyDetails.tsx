@@ -2,7 +2,14 @@ import { useState } from "react";
 import { mockUserData } from "@/lib/utils";
 import { mockPropertyData } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { UserRound, Edit, CheckCircle, Building2 } from "lucide-react";
+import {
+  UserRound,
+  Edit,
+  CheckCircle,
+  Building2,
+  Plus,
+  ArrowLeft,
+} from "lucide-react";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,14 +23,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
+import { GDPRInfo } from "./GDPRInfo";
+import { GradientSeparator } from "@/components/ui/gradientSeparator";
+import { Link } from "react-router-dom";
+import { InfoPopover } from "./InfoPopover";
 const personalInfoFormSchema = z.object({
   firstName: z.string().min(1, "First name is required.").max(100),
   lastName: z.string().min(1, "Last name is required.").max(100),
@@ -32,16 +35,10 @@ const personalInfoFormSchema = z.object({
   insureReference: z.string().max(100).optional(),
 });
 
-const propertyInfoFormSchema = z.object({
-  propertyAddress: z.string().min(5, "Property address is required.").max(70),
-  propertyType: z.string().optional().nullable(),
-});
-
 type PersonalInfoFormValues = z.infer<typeof personalInfoFormSchema>;
-type PropertyInfoFormValues = z.infer<typeof propertyInfoFormSchema>;
+
 function VerifyDetails() {
   const [isEditingPersonalInfo, setIsEditingPersonalInfo] = useState(false);
-  const [isEditingProperty, setIsEditingProperty] = useState(false);
 
   const personalInfoForm = useForm<PersonalInfoFormValues>({
     resolver: zodResolver(personalInfoFormSchema),
@@ -54,21 +51,27 @@ function VerifyDetails() {
     },
   });
 
-  const propertyInfoForm = useForm<PropertyInfoFormValues>({
-    resolver: zodResolver(propertyInfoFormSchema),
-    defaultValues: {
-      propertyAddress: `${mockPropertyData.address.addressLine}${
-        mockPropertyData.address.additionalAddressLine
-          ? `, ${mockPropertyData.address.additionalAddressLine}`
-          : ""
-      }, ${mockPropertyData.address.city}, ${mockPropertyData.address.postcode}`,
-      propertyType: mockPropertyData.attributes[0]?.value || null,
-    },
-  });
-
   return (
     <>
-      <Card>
+      <div className="mb-4 mt-4 flex justify-start px-4">
+        <Button variant="outline" asChild className="w-fit items-center">
+          <Link to="/">
+            <ArrowLeft className="mr-2 size-4" />
+            back to your property
+          </Link>
+        </Button>
+      </div>
+      <div className="flex items-center justify-center gap-2 px-4">
+        <h2 className="mb-4 mt-4 text-center text-2xl font-bold">
+          First Let's Verify Your Details
+        </h2>
+        <InfoPopover
+          title="Why do we need to verify your details?"
+          content="We need to make sure that this is your policy and that your contact details and address are correct. We use your exact property location to access Environment Agency flood risk data, local water level monitoring, and ensure any flood defenses we recommend are suitable and get delivered quickly in a flood event."
+        />
+      </div>
+
+      <Card className="m-4">
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2">
@@ -187,140 +190,115 @@ function VerifyDetails() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-gray-500">Name</Label>
-                  <p>
+                  <p className="break-words">
                     {personalInfoForm.watch("firstName")}{" "}
                     {personalInfoForm.watch("lastName")}
                   </p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-gray-500">Email Address</Label>
-                  <p>{personalInfoForm.watch("email")}</p>
+                  <p className="break-words break-all">
+                    {personalInfoForm.watch("email")}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-gray-500">Phone Number</Label>
-                  <p>{personalInfoForm.watch("phoneNumber")}</p>
+                  <p className="break-words">
+                    {personalInfoForm.watch("phoneNumber")}
+                  </p>
                 </div>
                 <div className="flex flex-col gap-2">
                   <Label className="text-sm text-gray-500">Policy Number</Label>
-                  <p>{personalInfoForm.watch("insureReference") || "—"}</p>
+                  <p className="break-words">
+                    {personalInfoForm.watch("insureReference") || "—"}
+                  </p>
                 </div>
               </div>
             )}
           </Form>
         </CardContent>
       </Card>
-      <Card>
+      <Card className="m-4">
         <CardHeader>
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <Building2 className="size-5 text-muted-foreground" />
-              <CardTitle>Property Information</CardTitle>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-1">
+              <div className="flex items-center gap-2">
+                <Building2 className="size-5 text-muted-foreground" />
+                <CardTitle>Property Information</CardTitle>
+              </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsEditingProperty(!isEditingProperty)}
-            >
-              <Edit className="size-4 text-muted-foreground" />
-            </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <Form {...propertyInfoForm}>
-            {isEditingProperty ? (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label className="text-sm text-gray-500">Address</Label>
-                  <FormField
-                    control={propertyInfoForm.control}
-                    name="propertyAddress"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input {...field} placeholder="Property Address" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="text-sm text-gray-500">Property Type</Label>
-                  <FormField
-                    control={propertyInfoForm.control}
-                    name="propertyType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value || undefined}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select Property Type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Semi-detached">
-                              Semi-detached
-                            </SelectItem>
-                            <SelectItem value="Detached">Detached</SelectItem>
-                            <SelectItem value="Terraced">Terraced</SelectItem>
-                            <SelectItem value="Bungalow">Bungalow</SelectItem>
-                            <SelectItem value="Cottage">Cottage</SelectItem>
-                            <SelectItem value="Flat">Flat</SelectItem>
-                            <SelectItem value="Mobile Home">
-                              Mobile Home
-                            </SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="mt-4 flex justify-end gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      propertyInfoForm.reset();
-                      setIsEditingProperty(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={propertyInfoForm.handleSubmit((data) => {
-                      console.log("Save property:", data);
-                      setIsEditingProperty(false);
-                    })}
-                  >
-                    <CheckCircle className="mr-2 size-4" />
-                    Save
-                  </Button>
-                </div>
+          {mockPropertyData ? (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <Label className="text-sm text-gray-500">Address</Label>
+                <p>
+                  {mockPropertyData.address.addressLine}
+                  {mockPropertyData.address.additionalAddressLine
+                    ? `, ${mockPropertyData.address.additionalAddressLine}`
+                    : ""}
+                  , {mockPropertyData.address.city},{" "}
+                  {mockPropertyData.address.postcode}
+                </p>
               </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <Label className="text-sm text-gray-500">Address</Label>
-                  <p>{propertyInfoForm.watch("propertyAddress")}</p>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="text-sm text-gray-500">Property Type</Label>
-                  <p>{propertyInfoForm.watch("propertyType") || "—"}</p>
-                </div>
+              <div className="flex flex-col gap-2">
+                <Label className="text-sm text-gray-500">Property Type</Label>
+                <p>
+                  {mockPropertyData.attributes[0]?.value
+                    ?.charAt(0)
+                    .toUpperCase() +
+                    mockPropertyData.attributes[0]?.value?.slice(1) || "—"}
+                </p>
               </div>
-            )}
-          </Form>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <p>
+                If this card is empty, it means that we don't have any property
+                information for you yet.
+              </p>
+              <p>
+                Adding your property information will allow us to provide you
+                accurate flood risk information and to prepare your flood kit.
+              </p>
+              <Button
+                variant="default"
+                size="lg"
+                className="bg-black text-white"
+              >
+                <Plus className="mr-2 size-4" /> Add Property Information
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
+      {/* Validation/Edit  Buttons*/}
+      <div className="mt-4 flex flex-col items-stretch gap-4 px-4 sm:flex-row sm:justify-center">
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => setIsEditingPersonalInfo(true)}
+          className="w-full sm:w-auto"
+        >
+          <Edit className="mr-2 size-4" /> Something's not right
+        </Button>
+        <Button
+          variant="default"
+          size="lg"
+          className="w-full bg-black text-white sm:w-auto"
+        >
+          <CheckCircle className="mr-2 size-4" /> Look's good
+        </Button>
+      </div>
+      <GradientSeparator className="mx-auto my-4 h-1 w-full max-w-96" />
+      <div className="m-4">
+        <GDPRInfo />
+      </div>
     </>
   );
 }

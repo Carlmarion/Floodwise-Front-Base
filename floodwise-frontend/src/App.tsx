@@ -61,6 +61,12 @@ function App() {
     "/flood-plan": "Flood Plan",
     "/faq-support": "FAQ & Support",
     "/account-management": "Account Management",
+    "/property-assessment/verify-details":
+      "Property Assessment - Verify Details",
+    "/property-assessment/property-construction":
+      "Property Assessment - Property Construction",
+    "/property-assessment/other-structures":
+      "Property Assessment - Other Structures",
   };
   // TODO: Add API call to fetch current user's property ID on mount
   // TODO: Add API call to fetch user profile/settings if needed
@@ -126,14 +132,18 @@ function App() {
                       </Link>
                       {/* TODO: Fetch verify details data on click/navigation */}
                     </SidebarMenuButton>
-                    <SidebarMenuButton>
-                      <Building className="h-4 w-4" />
-                      <span>Property Construction</span>
+                    <SidebarMenuButton asChild>
+                      <Link to="/property-assessment/property-construction">
+                        <Building className="h-4 w-4" />
+                        <span>Property Construction</span>
+                      </Link>
                       {/* TODO: Fetch property construction data on click/navigation */}
                     </SidebarMenuButton>
-                    <SidebarMenuButton>
-                      <Building2 className="h-4 w-4" />
-                      <span>Other Structures</span>
+                    <SidebarMenuButton asChild>
+                      <Link to="/property-assessment/other-structures">
+                        <Building2 className="h-4 w-4" />
+                        <span>Other Structures</span>
+                      </Link>
                       {/* TODO: Fetch other structures data on click/navigation */}
                     </SidebarMenuButton>
                     <SidebarMenuButton>
@@ -241,7 +251,10 @@ function App() {
         <Routes>
           <Route path="/" element={<PropertyOverview />} />
           <Route path="/my-flood-kit" element={<MyFloodKit />} />
-          <Route path="/property-assessment" element={<PropertyAssessment />} />
+          <Route
+            path="/property-assessment/*"
+            element={<PropertyAssessment />}
+          />
         </Routes>
         <Footer />
       </main>
