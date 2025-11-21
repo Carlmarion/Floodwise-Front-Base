@@ -31,12 +31,11 @@ import {
   Zap,
   Shield,
   Settings,
-  Plus,
   BookOpen,
-  Waves,
   RefreshCcw,
   ChevronDown,
   ChevronRight,
+  Lightbulb,
 } from "lucide-react";
 
 import { GradientSeparator } from "./components/ui/gradientSeparator";
@@ -48,6 +47,8 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { MyFloodKit } from "./pages/MyFloodKit";
 import { PropertyAssessment } from "./pages/PropertyAssessment";
+import { FloodPlan } from "./pages/FloodPlan";
+import { YourFloodPlan } from "./components/flood-plan/YourFloodPlan";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -57,6 +58,7 @@ function App() {
   const routeTitles: Record<string, string> = {
     "/": "Property Overview",
     "/my-flood-kit": "My Flood Kit",
+    // PROPERTY ASSESSMENT ROUTES
     "/property-assessment": "Property Assessment",
     "/flood-plan": "Flood Plan",
     "/faq-support": "FAQ & Support",
@@ -67,6 +69,9 @@ function App() {
       "Property Assessment - Property Construction",
     "/property-assessment/other-structures":
       "Property Assessment - Other Structures",
+    // FLOOD PLAN ROUTES
+    "/flood-plan/flood-informations": "Flood Plan - Flood Informations",
+    "/flood-plan/your-flood-plan": "Flood Plan - Your Flood Plan",
   };
   // TODO: Add API call to fetch current user's property ID on mount
   // TODO: Add API call to fetch user profile/settings if needed
@@ -196,25 +201,29 @@ function App() {
                 <CollapsibleContent>
                   <div className="ml-6 space-y-1">
                     {/* TODO: Add API calls to fetch flood plan data for each section */}
-                    <SidebarMenuButton>
-                      <Plus className="h-4 w-4" />
-                      <span>Your Flood Plan</span>
+                    <SidebarMenuButton asChild>
+                      <Link to="/flood-plan/flood-informations">
+                        <Lightbulb className="h-4 w-4" />
+                        <span>Flood Informations</span>
+                      </Link>
                       {/* TODO: Fetch flood plan data on click/navigation */}
                     </SidebarMenuButton>
-                    <SidebarMenuButton>
-                      <BookOpen className="h-4 w-4" />
-                      <span>Getting Prepared</span>
-                      {/* TODO: Fetch getting prepared data on click/navigation */}
+                    <SidebarMenuButton asChild>
+                      <Link to="/flood-plan/your-flood-plan">
+                        <BookOpen className="h-4 w-4" />
+                        <span>Your Flood Plan</span>
+                      </Link>
+                      {/* TODO: Fetch your flood plan data on click/navigation */}
                     </SidebarMenuButton>
                     <SidebarMenuButton>
-                      <Waves className="h-4 w-4" />
+                      <Shield className="h-4 w-4" />
                       <span>During a Flood</span>
-                      {/* TODO: Fetch during flood data on click/navigation */}
+                      {/* TODO: Fetch your flood plan data on click/navigation */}
                     </SidebarMenuButton>
                     <SidebarMenuButton>
                       <RefreshCcw className="h-4 w-4" />
                       <span>After a Flood</span>
-                      {/* TODO: Fetch after flood data on click/navigation */}
+                      {/* TODO: Fetch your flood plan data on click/navigation */}
                     </SidebarMenuButton>
                   </div>
                 </CollapsibleContent>
@@ -254,6 +263,11 @@ function App() {
           <Route
             path="/property-assessment/*"
             element={<PropertyAssessment />}
+          />
+          <Route path="/flood-plan/*" element={<FloodPlan />} />
+          <Route
+            path="/flood-plan/your-flood-plan"
+            element={<YourFloodPlan />}
           />
         </Routes>
         <Footer />

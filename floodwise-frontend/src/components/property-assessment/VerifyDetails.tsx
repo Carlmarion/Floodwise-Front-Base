@@ -26,7 +26,7 @@ import { z } from "zod";
 import { GDPRInfo } from "./GDPRInfo";
 import { GradientSeparator } from "@/components/ui/gradientSeparator";
 import { Link } from "react-router-dom";
-import { InfoPopover } from "./InfoPopover";
+import { InfoPopover } from "../shared/InfoPopover";
 const personalInfoFormSchema = z.object({
   firstName: z.string().min(1, "First name is required.").max(100),
   lastName: z.string().min(1, "Last name is required.").max(100),

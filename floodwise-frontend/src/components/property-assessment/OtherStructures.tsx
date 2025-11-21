@@ -10,7 +10,7 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { InfoPopover } from "./InfoPopover";
+import { InfoPopover } from "../shared/InfoPopover";
 import { GDPRInfo } from "./GDPRInfo";
 import { useState } from "react";
 import type { AdditionalStructure } from "@/types/additionalStructure";
